@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Remarks</title>
+  </head>
+  <body style="font-family:sans-serif;text-align:center;padding-top:50px;background:white;color:black;">
+    <h2>Leave Approval</h2>
+    <form id="approvalForm">
+      <label>Remarks:</label><br /><br />
+      <textarea id="remarks" rows="4" cols="40" required></textarea><br /><br />
+      <button type="submit">Submit</button>
+    </form>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const row = params.get("row");
+      const email = params.get("email");
+      const action = params.get("action");
+
+      let webHookUrl;
+      //2 webhooks for 2 case(when manager clicks on accept/reject)
+      if (action === "approve") {
+        webHookUrl =
+          "https://hook.eu1.make.com/332p3i71cvgsa9vw4841w8pj7d2sxryb";
+      } else {
+        webHookUrl =
+          "https://hook.eu1.make.com/a86jxy29ytjf0wmpsk79byogn6l38his";
+      }
+
+      document
+        .getElementById("approvalForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const remarks = document.getElementById("remarks").value;
+
+          //respective webhook call
+          await fetch(`${webHookUrl}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              row: row,
+              email: email,
+              remarks: remarks,
+            }),
+          });
+
+          document.body.innerHTML = `<div style="font-family:sans-serif;text-align:center;padding-top:50px;background:white;color:black;">
+   <h2> Leave approved by you, leave request forwarded to HR </h2>
+   <p>You can now close this tab</p>
+</div>`;
+        });
+    </script>
+  </body>
+</html>
