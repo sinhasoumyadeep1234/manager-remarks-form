@@ -19,11 +19,14 @@
       const action = params.get("action");
 
       let webHookUrl;
+      let message = "";
       //2 webhooks for 2 case(when manager clicks on accept/reject)
       if (action === "approve") {
+        message = "approved by you, leave request forwarded to HR ";
         webHookUrl =
           "https://hook.eu1.make.com/332p3i71cvgsa9vw4841w8pj7d2sxryb";
       } else {
+        message = "rejected by you";
         webHookUrl =
           "https://hook.eu1.make.com/a86jxy29ytjf0wmpsk79byogn6l38his";
       }
@@ -48,7 +51,7 @@
           });
 
           document.body.innerHTML = `<div style="font-family:sans-serif;text-align:center;padding-top:50px;background:white;color:black;">
-   <h2> Leave approved by you, leave request forwarded to HR </h2>
+   <h2> Leave ${message} </h2>
    <p>You can now close this tab</p>
 </div>`;
         });
